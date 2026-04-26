@@ -16,14 +16,14 @@ read -r -p "> " upgrade_answer
 
 if [[ $upgrade_answer =~ ^[Yy]$ ]]; then
   echo "Upgrading packages..."
-  pkg upgrade -y
+  pkg update && pkg upgrade -y && pkg install python3 git clang ffmpeg wget libjpeg-turbo libcrypt ndk-sysroot zlib openssl python-psutil -y -o Dpkg::Options::="--force-confold" || exit 2
 else
   echo "Skipping package upgrade"
 fi
 
 # Install required packages
 echo "Installing required packages..."
-pkg install python3 git clang ffmpeg wget libjpeg-turbo libcrypt ndk-sysroot zlib openssl python-psutil -y || exit 2
+pkg install python3 git clang ffmpeg 
 
 # Check if already installed
 if [[ -f ".env" ]] && [[ -f "my_account.session" ]]; then
