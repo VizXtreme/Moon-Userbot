@@ -7,26 +7,50 @@ fi
 
 termux-wake-lock
 
-pkg update -y && pkg upgrade -y
-pkg install python3 git clang ffmpeg wget libjpeg-turbo libcrypt ndk-sysroot zlib openssl python-psutil -y || exit 2
+# Update packages with default "N" (no)
+echo "Updating package lists..."
+pkg update
 
-LDFLAGS="-L${PREFIX}/lib/" CFLAGS="-I${PREFIX}/include/" pip3 install --upgrade pillow
+echo "Do you want to upgrade packages? [y/N]"
+read -r -p "> " upgrade_answer
 
-if [[ -d "Moon-Userbot" ]]; then
-  cd Moon-Userbot || exit
-elif [[ -f ".env.dist" ]] && [[ -f "main.py" ]] && [[ -d "modules" ]]; then
-  :
+if [[ $upgrade_answer =~ ^[Yy]$ ]]; then
+  echo "Upgrading packages..."
+  pkg upgrade -y
 else
-  git clone https://github.com/The-MoonTg-project/Moon-Userbot || exit 2
-  cd Moon-Userbot || exit 2
+  echo "Skipping package upgrade"
 fi
 
+# Install required packages
+echo "Installing required packages..."
+pkg install python3 git clang ffmpeg wget libjpeg-turbo libcrypt ndk-sysroot zlib openssl python-psutil -y || exit 2
+
+# Check if already installed
 if [[ -f ".env" ]] && [[ -f "my_account.session" ]]; then
   echo "It seems that Moon-Userbot is already installed. Exiting..."
   exit
 fi
 
-python3 -m pip install -U -r requirements.txt || exit 2
+# Create virtual environment with system site packages
+echo "Creating virtual environment with system site packages..."
+python3 -m venv --system-site-packages venv || exit 2
+
+# Activate venv for the rest of the script
+source venv/bin/activate
+
+# Upgrade pip in venv
+pip install --upgrade pip
+
+# Install Pillow with flags using venv's pip
+LDFLAGS="-L${PREFIX}/lib/" CFLAGS="-I${PREFIX}/include/" pip install --upgrade pillow
+
+# First install requirements.txt normally
+echo "Installing requirements from Moon-Userbot..."
+pip install -U -r requirements.txt || exit 2
+
+# Fix dependency conflicts by pinning correct versions
+echo "Fixing dependency conflicts..."
+pip install 'dnspython==2.7.0' 'pymongo==4.13.0' --force-reinstall --no-deps
 
 echo
 echo "Enter API_ID and API_HASH"
@@ -143,10 +167,12 @@ COHERE_KEY=${cohere_key}
 PM_LIMIT=${pm_limit}
 EOL
 
-python3 install.py 3 || exit 3
+# Run install.py with venv's python
+python install.py 3 || exit 3
 
 echo
 echo "============================"
 echo "Great! Moon-Userbot installed successfully!"
-echo "Start with: \"cd Moon-Userbot && python3 main.py\""
+echo "Start with: source venv/bin/activate && python main.py"
+echo "Or directly: ./venv/bin/python main.py"
 echo "============================"
