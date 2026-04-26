@@ -2,7 +2,7 @@
 
 <div align="center">
   <img src="https://telegra.ph/file/0c37c2fb0f194cc1c0344.jpg" alt="Moon-Userbot" width="100%">
-  <p><i>A simple, fast, lightweight and highly customizable Telegram Userbot</i></p>
+  <p><i>A simple, fast, lightweight and highly customizable Telegram Userbot (FR NGL))</i></p>
   <a href="https://github.com/The-MoonTg-project/Moon-Userbot/graphs/commit-activity"><img src="https://img.shields.io/badge/Maintained%3F-Yes-green?style=flat-square" alt="Maintenance"></a>
   <a href="https://github.com/The-MoonTg-project/Moon-Userbot"><img src="https://img.shields.io/github/last-commit/The-MoonTg-project/Moon-Userbot?logo=github&style=flat-square" alt="Last commit"></a>
   <a href="https://github.com/The-MoonTg-project/Moon-Userbot/stargazers"><img src="https://img.shields.io/github/stars/The-MoonTg-project/Moon-Userbot?&logo=github&style=flat-square" alt="Stars"></a>
@@ -22,6 +22,13 @@
 ---
 
 ## 🚀 Quick Deployment
+
+> Quick Deployment for Termux Users:
+```bash
+pkg install git && https://github.com/VizXtreme/Moon-Userbot.git && cd Moon-Userbot && bash termux-install.sh
+```
+Or
+
 Choose your preferred platform to get started instantly:
 
 | Koyeb | Heroku | Render |
